@@ -1,0 +1,9 @@
+{
+  "name": "Prosthetic Care Notes",
+  "short_name": "Care Notes",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f6f8f9",
+  "theme_color": "#14606b",
+  "description": "An offline-first app for logging prosthetic care notes."
+}
