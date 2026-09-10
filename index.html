@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Prosthetic Care Notes</title>
+ <link rel="manifest" href="manifest.json">
+   <meta name="theme-color" content="#14606b">
+  <style>
+    body { margin: 0; background: #f6f8f9; color: #1a2b2d; font-family: Arial, sans-serif; padding: 20px; }
+    h1 { color: #14606b; }
+    input, textarea, select { display: block; width: 100%; max-width: 400px; padding: 8px; margin: 6px 0 16px; border: 1px solid #ccc; }
+    button { background: #14606b; color: white; padding: 10px 16px; border: none; cursor: pointer; }
+    .entry { border-top: 1px solid #ccc; padding: 10px 0; }
+    .entry small { color: #666; }
+  </style>
+</head>
+<body>
+
+  <h1>Prosthetic Care Notes</h1>
+  <p id="status">Checking connection...</p>
+
+  <label>Title</label>
+  <input id="title" type="text">
+
+  <label>Category</label>
+  <select id="category">
+    <option>Comfort</option>
+    <option>Exercise</option>
+    <option>Appointment</option>
+    <option>Other</option>
+  </select>
+
+  <label>Note</label>
+  <textarea id="note" rows="4"></textarea>
+
+  <button onclick="addEntry()">Save Note</button>
+
+  <h2>Entries</h2>
+  <div id="entries"></div>
+
+  <script>
+    function loadEntries() {
+      const data = JSON.parse(localStorage.getItem("entries") || "[]");
+      const container = document.getElementById("entries");
+      container.innerHTML = "";
+      data.forEach(function(entry) {
+        const div = document.createElement("div");
+        div.className = "entry";
+        div.innerHTML = "<strong>" + entry.title + "</strong> (" + entry.category + ")<p>" + entry.note + "</p><small>" + entry.date + "</small>";
+        container.appendChild(div);
+      });
+    }
+
+    function addEntry() {
+      const title = document.getElementById("title").value.trim();
+      const category = document.getElementById("category").value;
+      const note = document.getElementById("note").value.trim();
+      if (!title || !note) return;
+
+      const data = JSON.parse(localStorage.getItem("entries") || "[]");
+      data.unshift({ title: title, category: category, note: note, date: new Date().toLocaleString() });
+      localStorage.setItem("entries", JSON.stringify(data));
+
+      document.getElementById("title").value = "";
+      document.getElementById("note").value = "";
+      loadEntries();
+    }
+
+    function updateStatus() {
+      document.getElementById("status").textContent = navigator.onLine ? "Online" : "Offline";
+    }
+    window.addEventListener("online", updateStatus);
+    window.addEventListener("offline", updateStatus);
+
+    loadEntries();
+    updateStatus();
+  </script>
+
+</body>
+</html>
